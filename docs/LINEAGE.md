@@ -2,13 +2,10 @@
 
 ```mermaid
 flowchart LR
-  A[Raw claims feed] --> B[stg_claims]
-  B --> C[fct_claims]
-  C --> D[Claims reporting / reconciliation]
-  E[Raw HR feed] --> F[Staging HR model]
-  F --> G[Curated workforce model]
-  H[Raw operations feed] --> I[Staging operations model]
-  I --> J[Curated operations model]
+  A[seeds/raw_claims.csv] --> B[raw_claims]
+  B --> C[stg_claims]
+  C --> D[fct_claims]
+  D --> E[analytics / reconciliation]
 ```
 
-The public repository implements the claims slice with synthetic data and documents the same control pattern for additional domains. No employer schemas or healthcare records are included.
+The public implementation contains a synthetic claims slice. The same control pattern can be extended to other healthcare domains without publishing employer schemas or records.

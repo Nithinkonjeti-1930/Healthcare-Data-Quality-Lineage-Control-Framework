@@ -4,6 +4,8 @@ config-version: 2
 profile: healthcare_quality_lineage
 model-paths: ["models"]
 seed-paths: ["seeds"]
+test-paths: ["tests_dbt"]
+clean-targets: ["target", "dbt_packages"]
 models:
   healthcare_quality_lineage:
     staging:

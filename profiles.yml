@@ -1,0 +1,7 @@
+healthcare_quality_lineage:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: healthcare_quality.duckdb
+      threads: 2

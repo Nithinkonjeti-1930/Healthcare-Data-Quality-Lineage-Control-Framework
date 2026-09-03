@@ -1,23 +1,18 @@
 version: 2
 
-sources:
-  - name: raw_healthcare
-    schema: raw
-    tables:
-      - name: claims
-        columns:
-          - name: claim_id
-            tests: [not_null, unique]
-          - name: member_id
-            tests: [not_null]
-
 models:
   - name: stg_claims
     columns:
       - name: claim_id
         tests: [not_null, unique]
+      - name: member_id
+        tests: [not_null]
       - name: amount
         tests: [not_null]
+      - name: claim_status
+        tests:
+          - accepted_values:
+              values: ['PAID', 'DENIED', 'PENDING']
   - name: fct_claims
     columns:
       - name: claim_id

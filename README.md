@@ -1,62 +1,56 @@
 # Healthcare Data Quality & Lineage Control Framework
 
-A synthetic analytics-engineering project focused on the controls that make warehouse data trustworthy: **schema validation, dbt tests, reconciliation, source-to-target lineage, and CI release checks**.
+A synthetic healthcare analytics-engineering project focused on **data validation, source-to-target reconciliation, dbt tests, lineage, and release controls**. It is designed as a public portfolio implementation rather than employer production code.
 
-> This is an independent portfolio implementation using synthetic data. It contains no employer code, PHI, PII, proprietary schemas, or internal configuration.
+## Verified portable path
 
-## Architecture
+```bash
+python src/reconcile.py --source data/source_claims.csv --target data/curated_claims.csv
+python -m unittest discover -s tests -v
+```
+
+The reconciliation checks:
+- row count;
+- claim-ID set equality;
+- duplicate IDs;
+- monetary control totals;
+- required columns;
+- numeric amount validity.
+
+## dbt / DuckDB local project
+
+The repository also contains a locally runnable dbt project using synthetic seed data and DuckDB.
+
+```bash
+pip install -r requirements-dbt.txt
+dbt seed --profiles-dir .
+dbt run --profiles-dir .
+dbt test --profiles-dir .
+```
+
+## Lineage
 
 ```mermaid
 flowchart LR
-    SRC[Claims / HR / Operations sources] --> RAW[Raw warehouse layer]
-    RAW --> STG[dbt staging models]
-    STG --> CUR[Curated dimensional models]
-    CUR --> BI[Analytics / reporting]
-    RAW --> REC[Reconciliation controls]
-    CUR --> REC
-    TEST[dbt + schema tests] --> STG
-    TEST --> CUR
-    CI[GitHub Actions] --> TEST
+  S[synthetic raw_claims seed] --> STG[stg_claims]
+  STG --> F[fct_claims]
+  F --> R[reporting / reconciliation]
 ```
 
-## Controls demonstrated
+See [`docs/LINEAGE.md`](docs/LINEAGE.md).
 
-- required-field and uniqueness testing
-- source-to-target record-count reconciliation
-- monetary control-total reconciliation
-- duplicate detection
-- reusable staging/curated SQL models
-- documented lineage between raw, staging, and curated layers
-- CI checks before a change is considered release-ready
+## Controls represented
 
-## Repository layout
+- `not_null` and `unique` dbt tests on claim IDs;
+- accepted-value test on claim status;
+- positive-amount test using a singular dbt test;
+- source/target reconciliation utility;
+- CI running Python checks plus dbt seed/run/test;
+- synthetic-only public data policy.
 
-```text
-models/                dbt-style staging and mart models
-src/reconcile.py       source-vs-target reconciliation utility
-data/                  synthetic sample inputs/outputs
-tests/                 automated tests
-docs/LINEAGE.md        lineage documentation
-.github/workflows/     CI validation
-```
+## Technologies
 
-## Run locally
-
-```bash
-python -m venv .venv
-# activate the environment
-pip install -r requirements.txt
-pytest -q
-python src/reconcile.py --source data/source_claims.csv --target data/curated_claims.csv
-```
-
-## Why this matters
-
-Successful data platforms do more than move records. Downstream users need to know that datasets are complete, structurally valid, traceable to sources, and reconciled before they reach analytics. This project isolates those controls so they are visible and testable.
-
-## Technologies represented
-
-Python · SQL · dbt-style modeling · Snowflake-compatible warehouse patterns · GitHub Actions · Data Quality · Reconciliation · Lineage · Metadata
+Python · SQL · dbt · DuckDB local validation · Snowflake-compatible modeling concepts · Data Quality · Reconciliation · Data Lineage · GitHub Actions
 
 ## Author
 
