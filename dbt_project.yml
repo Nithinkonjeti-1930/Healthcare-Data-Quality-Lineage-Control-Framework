@@ -1,0 +1,12 @@
+name: healthcare_quality_lineage
+version: "1.0.0"
+config-version: 2
+profile: healthcare_quality_lineage
+model-paths: ["models"]
+seed-paths: ["seeds"]
+models:
+  healthcare_quality_lineage:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

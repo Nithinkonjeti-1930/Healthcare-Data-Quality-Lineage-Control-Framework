@@ -1,0 +1,4 @@
+claim_id,member_id,service_date,amount,status
+C001,M001,2026-07-01,120.50,PAID
+C002,M002,2026-07-02,85.00,DENIED
+C003,M001,2026-07-04,210.00,PAID
